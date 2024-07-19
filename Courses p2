@@ -1,0 +1,201 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include "course.h"
+using namespace std;
+
+Course::Course(const string &code, const string &title, const string &instructor, int credits, int marks)
+    : code(code), title(title), instructor(instructor), credits(credits) ,marks(marks){}
+
+void Course::displayDetails() const
+{
+    cout << "Code: " << code << endl;
+    cout << "Title: " << title << endl;
+    cout << "Instructor: " << instructor << endl;
+    cout << "Credits: " << credits << endl;
+}
+
+int Course::get_marks()
+{
+     return marks;
+}
+
+char Course::calculateGrade() const {};
+
+const string &Course::getCode() const
+{
+    return code;
+}
+
+LectureCourse::LectureCourse(const string &code, const string &title, const string &instructor, int credits, int marks)
+    : Course(code, title, instructor, credits, marks) {}
+
+void LectureCourse::displayDetails() const
+{
+    cout << "Lecture Course" << endl;
+    Course::displayDetails();
+}
+
+char LectureCourse::calculateGrade() const
+{
+    int finalGrade=marks;
+    if (finalGrade >= 90)
+    {
+        return 'A';
+    }
+    else if (finalGrade >= 80)
+    {
+        return 'B';
+    }
+    else if (finalGrade >= 70)
+    {
+        return 'C';
+    }
+    else if (finalGrade >= 60)
+    {
+        return 'D';
+    }
+    else
+    {
+        return 'F';
+    }
+}
+
+LabCourse::LabCourse(const string &code, const string &title, const string &instructor, int credits, int marks)
+    : Course(code, title, instructor, credits, marks) {}
+
+void LabCourse::displayDetails() const
+{
+    cout << "Lab Course" << endl;
+    Course::displayDetails();
+}
+
+char LabCourse::calculateGrade() const
+{
+    int finalGrade=marks;
+    if (finalGrade >= 90)
+    {
+        return 'A';
+    }
+    else if (finalGrade >= 80)
+    {
+        return 'B';
+    }
+    else if (finalGrade >= 70)
+    {
+        return 'C';
+    }
+    else if (finalGrade >= 60)
+    {
+        return 'D';
+    }
+    else
+    {
+        return 'F';
+    }
+}
+
+SeminarCourse::SeminarCourse(const string &code, const string &title, const string &instructor, int credits, int marks)
+    : Course(code, title, instructor, credits,marks) {}
+
+void SeminarCourse::displayDetails() const
+{
+    cout << "Seminar Course" << endl;
+    Course::displayDetails();
+}
+
+char SeminarCourse::calculateGrade() const
+{
+    int finalGrade=marks;
+    if (finalGrade >= 90)
+    {
+        return 'A';
+    }
+    else if (finalGrade >= 80)
+    {
+        return 'B';
+    }
+    else if (finalGrade >= 70)
+    {
+        return 'C';
+    }
+    else if (finalGrade >= 60)
+    {
+        return 'D';
+    }
+    else
+    {
+        return 'F';
+    }
+}
+
+void CourseManager::addCourse(Course *course)
+{
+    courses.push_back(course);
+}
+
+void CourseManager::removeCourse(const string &code)
+{
+    for (auto it = courses.begin(); it != courses.end(); ++it)
+    {
+        if ((*it)->getCode() == code)
+        {
+            delete *it;
+            courses.erase(it);
+            break;
+        }
+    }
+}
+void CourseManager::displayAllCourses() const
+{
+    for (const auto &course : courses)
+    {
+        course->displayDetails();
+        cout << endl;
+    }
+}
+void Student::set_grade(char grade)
+{
+     this->grade = grade;
+}
+
+int Student::get_attendance()
+{
+     return attendance;
+}
+
+Student::Student(const string& name) : name(name) {};
+
+void Student::enroll(Course *course)
+{
+    enrolledCourses.push_back(course);
+}
+
+void Student::unenroll(const string &courseCode)
+{
+    auto it = enrolledCourses.begin();
+    while (it != enrolledCourses.end())
+    {
+        if ((*it)->getCode() == courseCode)
+        {
+            it = enrolledCourses.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+void Student::displayEnrolledCourses() const
+{
+    cout << "Enrolled Courses:" << endl;
+    //  cout<<enrolledCourses.size();
+    for (int i = 0; i < enrolledCourses.size(); i++)
+    {
+        enrolledCourses[i]->displayDetails();
+        cout << "Marks:" << enrolledCourses[i]->get_marks() << endl;
+        cout << "Grade:" << enrolledCourses[i]->calculateGrade() << endl;
+        cout << endl;
+    }
+}
