@@ -1,0 +1,29 @@
+#include "course.h"
+int main() {
+    CourseManager manager;
+
+    Course* lectureCourse = new LectureCourse("CS101", "IOOM", "Dr. Zanwar", 3, 85);
+    Course* labCourse = new LabCourse("CS101L", "IOOMLab", "Dr. Zanwar", 1,95);
+    Course* seminarCourse = new SeminarCourse("CS102S", "IOOM Seminar", "Dr. Darak", 2, 88);
+
+    manager.addCourse(lectureCourse);
+    manager.addCourse(labCourse);
+    manager.addCourse(seminarCourse);
+    cout << "Before removal:" << endl;
+    manager.displayAllCourses();
+
+    manager.removeCourse("CS101");
+
+    cout << "After removal:" << endl;
+    manager.displayAllCourses();
+
+     // Initialize a student
+    Student student("Tushar");
+
+    // Enroll student in courses
+    student.enroll(seminarCourse);
+    student.enroll(labCourse);
+
+    // Display enrolled courses
+    student.displayEnrolledCourses();
+}
