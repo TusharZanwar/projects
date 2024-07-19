@@ -1,0 +1,221 @@
+package package5;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Product {
+    private int ID;
+    private String name;
+    private String description;
+    private double price;
+    private int quantityAvailable;
+
+    public Product(int ID, String name, String description, double price, int quantityAvailable){
+        this.ID = ID;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantityAvailable = quantityAvailable;
+    }
+    public void display_details() {
+        System.out.println("ID : " + ID);
+        System.out.println("Name : " + name);
+        System.out.println("description : " + description);
+        System.out.println("Price : " + price);
+        System.out.println("Quantity available : " + quantityAvailable);
+    }
+
+    // Getters and setters
+    public int getId() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+
+class ShoppingCart {
+    private List<Product> items;
+
+    public ShoppingCart() {
+        this.items = new ArrayList<>();
+    }
+
+    public void addItem(Product product) {
+        items.add(product);
+    }
+
+    public void removeItem(Product product) {
+        items.remove(product);
+    }
+
+    public List<Product> getItems() {
+        return items;
+    }
+}
+
+class Customer {
+    private int ID;
+    private String name;
+    private String email;
+    private String shippingAddress;
+    private ShoppingCart mycart;
+    public Customer(int ID, String name, String email, String shippingAddress) {
+        this.ID = ID;
+        this.name = name;
+        this.email = email;
+        this.shippingAddress = shippingAddress;
+        this.mycart=new ShoppingCart();
+    }
+    public void add_to_mycart(Product p)
+    {
+       mycart.addItem(p);
+    }
+    public int getId() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+    public ShoppingCart getmycart()
+    {
+        return mycart;
+    }
+   
+    public void display_details(){
+    System.out.println("\nDetails of the customer are as follow :");
+        System.out.println("ID : " + ID);
+        System.out.println("Name : " + name);
+        System.out.println("Email : " + email);
+        System.out.println("Shipping address : " + shippingAddress);
+    }
+    // Getters and setters
+}
+
+class OnlineStore {
+    private List<Product> products;
+    private List<Customer> customers;
+   
+
+    public OnlineStore() {
+        this.products = new ArrayList<>();
+        this.customers = new ArrayList<>();
+       
+    }
+
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    public void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+    }
+
+    public void removeCustomer(Customer customer) {
+        customers.remove(customer);
+    }
+
+    public Product searchProducts(String prodobj) {
+      
+        for (Product product : products) {
+            if (product.getName().toLowerCase().contains(prodobj.toLowerCase())) {
+               return product;
+            }
+        }
+        return null;
+    }
+
+    public void placeOrder(Customer customer) {
+     int total_bill=0;
+        System.out.println("Order placed by customer: " + customer.getName());
+        for (Product item : customer.getmycart().getItems()) {
+            if(searchProducts(item.getName())!=null)
+            {
+                System.out.println("Item: " + item.getName() + ", Price: Rs" + item.getPrice());
+                total_bill+=item.getPrice();
+            }
+            else
+            {
+                System.out.println("Item: " + item.getName() +  " is not Available in my products");
+            }
+            
+        }
+        System.out.println("Total bill for your orders is "+total_bill);
+       
+    }
+
+    // Other methods for managing products, customers, and orders
+}
+
+
+public class assignment {
+    public static void main(String[] args) {
+        // Create products
+    	Scanner scanner = new Scanner(System.in);
+        Product laptop = new Product(1, "laptop", "HP", 100000, 2);
+        Product phone = new Product(2, "headphones", "boat", 2000, 8);
+        Product tablet = new Product(3, "ipad", "apple", 50000, 9);
+        scanner.nextLine();
+        System.out.println("Name:");
+        String name = scanner.nextLine();
+        System.out.println("Company:");
+        String description = scanner.nextLine();
+        System.out.println("Cost:");
+        int cost = scanner.nextInt();
+        System.out.println("Quantity:");
+        int quantity = scanner.nextInt();
+        int i=4;
+        Product term = new Product(i++,name,description,cost,quantity);
+
+        // Create a customer
+        Customer customer1 = new Customer(1, "tushar", "tushar@gmail.com", "nanded");
+        Customer customer2 = new Customer(2, "sarvesh", "sarv@gmail.com", "hingoli");
+        // Create an online store
+        OnlineStore onlineStore = new OnlineStore();
+        onlineStore.addProduct(laptop);
+        onlineStore.addProduct(phone);
+        onlineStore.addProduct(tablet);
+        onlineStore.addProduct(term);
+        onlineStore.addCustomer(customer1);
+         onlineStore.addCustomer(customer2);
+         //removing the products
+        System.out.println("The products after removing are: ");
+        onlineStore.removeProduct(laptop);
+      // Place an order
+        customer1.add_to_mycart(laptop);
+        customer1.add_to_mycart(phone);
+        customer1.add_to_mycart(term);
+        customer1.add_to_mycart(tablet);
+         customer2.add_to_mycart(tablet);
+         customer2.add_to_mycart(phone);
+        // Add customers to the store
+       // calculate the bill
+        onlineStore.placeOrder(customer1);
+       onlineStore.placeOrder(customer2);
+       scanner.close();
+        
+        
+    }
+}
