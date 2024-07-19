@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Course
+{
+protected:
+    string code;
+    string title;
+    string instructor;
+    int credits;
+    int marks;
+
+public:
+    Course(const string &code, const string &title, const string &instructor, int credits, int marks);
+    virtual void displayDetails() const;
+    virtual char calculateGrade() const; // Pure virtual function
+    const string &getCode() const;
+    int get_marks();
+};
+
+class LectureCourse : public Course
+{
+public:
+    LectureCourse(const string &code, const string &title, const string &instructor, int credits, int marks);
+    void displayDetails() const override;
+    char calculateGrade() const override;
+};
+
+class LabCourse : public Course
+{
+public:
+    LabCourse(const string &code, const string &title, const string &instructor, int credits, int marks);
+    void displayDetails() const override;
+    char calculateGrade() const override;
+};
+
+class SeminarCourse : public Course
+{
+public:
+    SeminarCourse(const string &code, const string &title, const string &instructor, int credits, int marks);
+    void displayDetails() const override;
+    char calculateGrade() const override;
+};
+
+class CourseManager
+{
+private:
+    vector<Course *> courses;
+
+public:
+    void addCourse(Course *course);
+    void removeCourse(const string &code);
+    void displayAllCourses() const;
+};
+
+class Student
+{
+private:
+    string name;
+    int attendance;
+    char grade;
+    vector<Course *> enrolledCourses;
+
+public:
+    Student(const string &name);
+    void enroll(Course *course);
+    void set_grade(char grade);
+    int get_attendance();
+    void unenroll(const string &courseCode);
+    void displayEnrolledCourses() const;
+};
