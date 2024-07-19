@@ -201,7 +201,7 @@ public class assignment {
         onlineStore.addCustomer(customer1);
          onlineStore.addCustomer(customer2);
          //removing the products
-        System.out.println("The products after removing are: ");
+        System.out.println("The products before removing are: ");
         onlineStore.removeProduct(laptop);
       // Place an order
         customer1.add_to_mycart(laptop);
