@@ -1,0 +1,225 @@
+package package3;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class restaurant {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        RestaurantOrderSystem restaurant1 = new RestaurantOrderSystem();
+        restaurant1.add_to_restaurant(new RestaurantMenuItem("dosa", "Masala", 30.0));
+        restaurant1.add_to_restaurant(new RestaurantMenuItem("Panipuri", "Spicy", 10.0));
+        restaurant1.add_to_restaurant(new RestaurantMenuItem("dhokla", "With Chutney", 25.0));
+        restaurant1.add_to_restaurant(new RestaurantMenuItem("dabeli", "tasty", 30));
+        restaurant1.add_to_restaurant(new RestaurantMenuItem("Pavbhaji", "Buttery", 50));
+
+        int choice;
+        while (true) {
+            System.out.println("Welcome to the Restaurant");
+            System.out.println("1. Add menu item to the restaurant");
+            System.out.println("2. Delete menu item from the restaurant");
+            System.out.println("3. Create order");
+            System.out.println("4. Display items in the restaurant");
+            System.out.println("5. Exit Restaurant");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the name of the menu item: ");
+                    String name = scanner.next();
+                    System.out.print("Enter the description of the menu item: ");
+                    String desc = scanner.next();
+                    System.out.print("Enter the price of the menu item: ");
+                    double price = scanner.nextDouble();
+                    restaurant1.add_to_restaurant(new RestaurantMenuItem(name, desc, price));
+                    System.out.println(name + " menu item added successfully.\n");
+                    break;
+                case 2:
+                    restaurant1.display_menu_in_restaurant();
+                    System.out.print("Enter the name of the menu item to be deleted: ");
+                    String itemName = scanner.next().toLowerCase();
+                    RestaurantMenuItem delItem = restaurant1.isItemPresent(itemName);
+                    if (delItem != null) {
+                        restaurant1.delete_from_restaurant(delItem);
+                        System.out.println(itemName + " menu item deleted successfully.\n");
+                    } else {
+                        System.out.println("Menu item not found.\n");
+                    }
+                    break;
+                case 3:
+                    restaurant1.Create_Order(scanner);
+                    break;
+                case 4:
+                    restaurant1.display_menu_in_restaurant();
+                    break;
+                case 5:
+                    System.out.println("Leaving the restaurant. Goodbye!");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid input. Please try again.\n");
+            }
+        }
+    }
+}
+
+interface MenuItems {
+    String getName();
+    String getDescription();
+    double getPrice();
+}
+
+class RestaurantMenuItem implements MenuItems {
+    private String name;
+    private String description;
+    private double price;
+
+    public RestaurantMenuItem(String name, String description, double price) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+}
+
+interface Order {
+    void add_item_to_order(RestaurantMenuItem item);
+    void remove_item_from_order(RestaurantMenuItem item);
+    double calculateTotalPrice();
+}
+
+class RestaurantOrder implements Order {
+    private List<RestaurantMenuItem> order;
+
+    public RestaurantOrder() {
+        order = new ArrayList<>();
+    }
+
+    public void add_item_to_order(RestaurantMenuItem item) {
+        order.add(item);
+    }
+
+    public void remove_item_from_order(RestaurantMenuItem item) {
+        order.remove(item);
+    }
+
+    public double calculateTotalPrice() {
+        double total_price = 0.0;
+        for (int i=0;i<order.size();i++) {
+            total_price += order.get(i).getPrice();
+        }
+        return total_price;
+    }
+
+    public void displayOrder() {
+        System.out.println("Your Order:");
+        for (int i = 0; i < order.size(); i++) {
+            System.out.println((i + 1) + ". " + order.get(i).getName() + " - " + order.get(i).getDescription() + " - " + order.get(i).getPrice());
+        }
+    }
+
+    public List<RestaurantMenuItem> getOrder() {
+        return order;
+    }
+}
+
+interface RestaurantSystem {
+    List<RestaurantMenuItem> Create_Order(Scanner scanner);
+    void add_to_restaurant(RestaurantMenuItem item);
+    void delete_from_restaurant(RestaurantMenuItem item);
+}
+
+class RestaurantOrderSystem implements RestaurantSystem {
+    private List<RestaurantMenuItem> available_food_items;
+
+    RestaurantOrderSystem() {
+        available_food_items = new ArrayList<>();
+    }
+
+    public void add_to_restaurant(RestaurantMenuItem m) {
+        available_food_items.add(m);
+    }
+
+    public void delete_from_restaurant(RestaurantMenuItem m) {
+        available_food_items.remove(m);
+    }
+
+    public RestaurantMenuItem isItemPresent(String name) {
+        for (int i=0;i<available_food_items.size();i++) {
+            if (available_food_items.get(i).getName().equalsIgnoreCase(name))
+                return available_food_items.get(i);
+        }
+        return null;
+    }
+
+    public void display_menu_in_restaurant() {
+        System.out.println("Available food items in the restaurant:");
+        for (int i = 0; i < available_food_items.size(); i++) {
+            System.out.println((i + 1) + ". " + available_food_items.get(i).getName() + " - " +
+                    available_food_items.get(i).getDescription() + " (Rs " + available_food_items.get(i).getPrice() + ")");
+        }
+        System.out.println();
+    }
+
+    public List<RestaurantMenuItem> Create_Order(Scanner scanner) {
+        RestaurantOrder rso = new RestaurantOrder();
+        display_menu_in_restaurant();
+        int choice;
+        String name;
+        while (true) {
+            System.out.println("1. Add food item to your order");
+            System.out.println("2. Remove food item from your order");
+            System.out.println("3. Display order and give bill");
+            System.out.println("4. Go back to main menu");
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter the name of the food item:");
+                    name = scanner.next().toLowerCase();
+                    RestaurantMenuItem itemToAdd = isItemPresent(name);
+                    if (itemToAdd != null) {
+                        rso.add_item_to_order(itemToAdd);
+                        System.out.println("Food item added successfully to your order.");
+                    } else {
+                        System.out.println("Food item not found in the menu.");
+                    }
+                    break;
+                case 2:
+                    System.out.println("Enter the name of the food item to remove:");
+                    name = scanner.next().toLowerCase();
+                    RestaurantMenuItem itemToRemove = isItemPresent(name);
+                    if (itemToRemove != null && rso.getOrder().contains(itemToRemove)) {
+                        rso.remove_item_from_order(itemToRemove);
+                        System.out.println("Food item removed successfully from your order.");
+                    } else {
+                        System.out.println("Food item not found in your order.");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Your order and bill:");
+                    rso.displayOrder();
+                    System.out.println("Total bill: Rs " + rso.calculateTotalPrice());
+                    return rso.getOrder();
+                case 4:
+                    return rso.getOrder();
+                default:
+                    System.out.println("Invalid input. Please try again.");
+            }
+        }
+    }
+}
+
+
